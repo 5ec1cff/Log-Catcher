@@ -1,6 +1,5 @@
 #!/system/bin/sh
 MODDIR=${0%/*}
-TIME=$(date +%Y-%m-%d-%H-%M-%S)
 
 if [ -d /cache ]; then
   LOG_PATH=/cache/bootlog
@@ -14,7 +13,7 @@ done
 while [ ! -d "/storage/emulated/0/Android" ]; do
   sleep 1
 done
-
+TIME=$(date +%Y-%m-%d-%H-%M-%S)
 FILE=/data/local/logcatcher/boot.lcs
 if [ ! -f "$FILE" ]; then
   pkill -f logcatcher-bootlog:S
