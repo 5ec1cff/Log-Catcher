@@ -13,7 +13,7 @@ done
 while [ ! -d "/storage/emulated/0/Android" ]; do
   sleep 1
 done
-TIME=$(date +%Y-%m-%d-%H-%M-%S)
+
 FILE=/data/local/logcatcher/boot.lcs
 if [ ! -f "$FILE" ]; then
   pkill -f logcatcher-bootlog:S
@@ -21,6 +21,7 @@ if [ ! -f "$FILE" ]; then
     tar -czf ${LOG_PATH}/oldlogbak.tar.gz ${LOG_PATH}/old
     rm -rf ${LOG_PATH}/old
   fi
+  TIME=$(date +%Y-%m-%d-%H-%M-%S)
   if [ -f ${LOG_PATH}/boot.log ]; then
     mv ${LOG_PATH}/boot.log ${LOG_PATH}/boot-$TIME.log
     tar -czf ${LOG_PATH}/bootlog.tar.gz ${LOG_PATH}/*.log
