@@ -1,6 +1,6 @@
 id=hwr_logcat
 name=Log Catcher
-version=v20
+version=v20.2
 versionCode=20
 author=Howard
 description=Catch boot log to /cache/boot.log.
