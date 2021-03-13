@@ -1,7 +1,7 @@
-id=logcat
+id=hwr_logcat
 name=Log Catcher
-version=v19
-versionCode=19
-author=MlgmXyysd,Howard
-description=Catch boot log to /cache/log/boot/boot-$time.log.
-support=https://t.me/CodeOfMeowCat
+version=v20
+versionCode=20
+author=Howard
+description=Catch boot log to /cache/boot.log.
+support=https://t.me/hzrtools

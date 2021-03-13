@@ -1,11 +1,7 @@
 #!/system/bin/sh
 MODDIR=${0%/*}
-
-lc_ver="v19"
-lc_vercode=19
-
-TIME=$(date +%Y-%m-%d-%H-%M-%S)
-
+MAGISK_VERSION=$(magisk -v)
+MAGISK_VER_CODE=$(magisk -V)
 android_sdk=$(getprop ro.build.version.sdk)
 build_desc=$(getprop ro.build.description)
 product=$(getprop ro.build.product)
@@ -18,31 +14,42 @@ android=$(getprop ro.build.version.release)
 build=$(getprop ro.build.id)
 
 if [ -d /cache ]; then
-    LOG_PATH=/cache/bootlog/
+    LOG_PATH=/cache/bootlog
 else
     LOG_PATH=/data/local/bootlog
 fi
 
-FILE=$LOG_PATH/boot-$TIME.log
-mkdir -p $LOG_PATH
-rm -rf $FILE
-touch $FILE
-echo "--------- beginning of head" >>$FILE
-echo "Log Catcher by MlgmXyysd" >>$FILE
-echo "Version: ${lc_ver} (${lc_vercode})" >>$FILE
-echo "--------- beginning of system info" >>$FILE
-echo "Android version: ${android}" >>$FILE
-echo "Android sdk: ${android_sdk}" >>$FILE
-echo "Android build: ${build}" >>$FILE
-echo "Fingerprint: ${fingerprint}" >>$FILE
-echo "ROM build description: ${build_desc}" >>$FILE
-echo "Architecture: ${arch}" >>$FILE
-echo "Device: ${device}" >>$FILE
-echo "Manufacturer: ${manufacturer}" >>$FILE
-echo "Brand: ${brand}" >>$FILE
-echo "Product: ${product}" >>$FILE
-echo "--------- beginning of dmesg" >>$FILE
-dmesg >>$FILE
-echo "--------- beginning of SELinux" >>$FILE
-getenforce >>$FILE
-logcat -f $FILE logcatcher-bootlog:S &
+if [ -d "$LOG_PATH" ]; then
+    if [ ! -d ${LOG_PATH}/old ]; then
+        mkdir -p ${LOG_PATH}/old
+    fi
+    if [ -f ${LOG_PATH}/*.log ]; then
+        mv ${LOG_PATH}/*.log "${LOG_PATH}/old"
+    fi
+else
+    mkdir -p $LOG_PATH
+fi
+
+LOG_FILE=$LOG_PATH/boot.log
+rm -f "${LOG_FILE}"
+touch "${LOG_FILE}"
+
+echo "--------- beginning of head" >>"${LOG_FILE}"
+echo "Log Catcher v20" >>"${LOG_FILE}"
+echo "--------- beginning of system info" >>"${LOG_FILE}"
+echo "Android version: ${android}" >>"${LOG_FILE}"
+echo "Android sdk: ${android_sdk}" >>"${LOG_FILE}"
+echo "Android build: ${build}" >>"${LOG_FILE}"
+echo "Fingerprint: ${fingerprint}" >>"${LOG_FILE}"
+echo "ROM build description: ${build_desc}" >>"${LOG_FILE}"
+echo "Architecture: ${arch}" >>"${LOG_FILE}"
+echo "Device: ${device}" >>"${LOG_FILE}"
+echo "Manufacturer: ${manufacturer}" >>"${LOG_FILE}"
+echo "Brand: ${brand}" >>"${LOG_FILE}"
+echo "Product: ${product}" >>"${LOG_FILE}"
+echo "Magisk: ${MAGISK_VERSION%:*} (${MAGISK_VER_CODE})" >>"${LOG_FILE}"
+echo "--------- beginning of dmesg" >>"${LOG_FILE}"
+dmesg >>"${LOG_FILE}"
+echo "--------- beginning of SELinux" >>"${LOG_FILE}"
+getenforce >>"${LOG_FILE}"
+logcat -f "${LOG_FILE}" logcatcher-bootlog:S &
