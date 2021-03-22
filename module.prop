@@ -1,7 +1,7 @@
 id=hwr_logcat
 name=Log Catcher
-version=v20.2
-versionCode=20
+version=v21
+versionCode=21
 author=Howard
 description=Catch boot log to /cache/boot.log.
 support=https://t.me/hzrtools

@@ -8,12 +8,18 @@ else
 fi
 
 while [ "$(getprop sys.boot_completed)" != "1" ]; do
-  sleep 1
+  sleep 3
 done
 while [ ! -d "/storage/emulated/0/Android" ]; do
-  sleep 1
+  sleep 3
 done
-
+test_file="/storage/emulated/0/Download/.PERMISSION_TEST"
+touch "$test_file"
+while [ ! -f "$test_file" ]; do
+  touch "$test_file"
+  sleep 3
+done
+rm "$test_file"
 FILE=/data/local/logcatcher/boot.lcs
 if [ ! -f "$FILE" ]; then
   pkill -f logcatcher-bootlog:S
@@ -26,13 +32,6 @@ if [ ! -f "$FILE" ]; then
     mv ${LOG_PATH}/boot.log ${LOG_PATH}/boot-$TIME.log
     tar -czf ${LOG_PATH}/bootlog.tar.gz ${LOG_PATH}/*.log
   fi
-  test_file="/storage/emulated/0/Download/.PERMISSION_TEST"
-  touch "$test_file"
-  while [ ! -f "$test_file" ]; do
-    touch "$test_file"
-    sleep 1
-  done
-  rm "$test_file"
   if [ -f ${LOG_PATH}/bootlog.tar.gz ]; then
     su -c cp ${LOG_PATH}/bootlog.tar.gz /storage/emulated/0/Download/bootlog-$TIME.tar.gz
     if [ -f "/storage/emulated/0/Download/bootlog-$TIME.tar.gz" ]; then
