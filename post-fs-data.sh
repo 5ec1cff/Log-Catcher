@@ -52,4 +52,4 @@ echo "--------- beginning of dmesg" >>"${LOG_FILE}"
 dmesg >>"${LOG_FILE}"
 echo "--------- beginning of SELinux" >>"${LOG_FILE}"
 getenforce >>"${LOG_FILE}"
-logcat -f "${LOG_FILE}" logcatcher-bootlog:S &
+logcat -b main,system,crash -f "${LOG_FILE}" logcatcher-bootlog:S &
