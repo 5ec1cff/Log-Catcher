@@ -58,7 +58,7 @@ touch "${LOG_FILE}"
     echo "Product: ${product}"
     echo "Magisk: ${MAGISK_VERSION%:*} (${MAGISK_VER_CODE})"
     echo "--------- beginning of dmesg"
-    dmesg >>"${LOG_FILE}"
+    dmesg
     echo "--------- beginning of SELinux"
     getenforce
 } >>"${LOG_FILE}"
