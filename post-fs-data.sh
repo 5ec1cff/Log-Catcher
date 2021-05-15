@@ -1,5 +1,13 @@
 #!/system/bin/sh
 MODDIR=${0%/*}
+
+grep_prop() {
+    local REGEX="s/^$1=//p"
+    shift
+    local FILES="$@"
+    [ -z "$FILES" ] && FILES='/system/build.prop'
+    sed -n "$REGEX" ${FILES} 2>/dev/null | head -n 1
+}
 MAGISK_VERSION=$(magisk -v)
 MAGISK_VER_CODE=$(magisk -V)
 android_sdk=$(getprop ro.build.version.sdk)
@@ -12,7 +20,8 @@ arch=$(getprop ro.product.cpu.abi)
 device=$(getprop ro.product.device)
 android=$(getprop ro.build.version.release)
 build=$(getprop ro.build.id)
-
+LOGC_VERSION=$(grep_prop version "${MODDIR}/module.prop")
+LOGC_VERSIONCODE=$(grep_prop versionCode "${MODDIR}/module.prop")
 if [ -d /cache ]; then
     LOG_PATH=/cache/bootlog
 else
@@ -33,23 +42,24 @@ fi
 LOG_FILE=$LOG_PATH/boot.log
 rm -f "${LOG_FILE}"
 touch "${LOG_FILE}"
-
-echo "--------- beginning of head" >>"${LOG_FILE}"
-echo "Log Catcher v20" >>"${LOG_FILE}"
-echo "--------- beginning of system info" >>"${LOG_FILE}"
-echo "Android version: ${android}" >>"${LOG_FILE}"
-echo "Android sdk: ${android_sdk}" >>"${LOG_FILE}"
-echo "Android build: ${build}" >>"${LOG_FILE}"
-echo "Fingerprint: ${fingerprint}" >>"${LOG_FILE}"
-echo "ROM build description: ${build_desc}" >>"${LOG_FILE}"
-echo "Architecture: ${arch}" >>"${LOG_FILE}"
-echo "Device: ${device}" >>"${LOG_FILE}"
-echo "Manufacturer: ${manufacturer}" >>"${LOG_FILE}"
-echo "Brand: ${brand}" >>"${LOG_FILE}"
-echo "Product: ${product}" >>"${LOG_FILE}"
-echo "Magisk: ${MAGISK_VERSION%:*} (${MAGISK_VER_CODE})" >>"${LOG_FILE}"
-echo "--------- beginning of dmesg" >>"${LOG_FILE}"
-dmesg >>"${LOG_FILE}"
-echo "--------- beginning of SELinux" >>"${LOG_FILE}"
-getenforce >>"${LOG_FILE}"
+{
+    echo "--------- beginning of head"
+    echo "Log Catcher version: ${LOGC_VERSION} (${LOGC_VERSIONCODE})"
+    echo "--------- beginning of system info"
+    echo "Android version: ${android}"
+    echo "Android sdk: ${android_sdk}"
+    echo "Android build: ${build}"
+    echo "Fingerprint: ${fingerprint}"
+    echo "ROM build description: ${build_desc}"
+    echo "Architecture: ${arch}"
+    echo "Device: ${device}"
+    echo "Manufacturer: ${manufacturer}"
+    echo "Brand: ${brand}"
+    echo "Product: ${product}"
+    echo "Magisk: ${MAGISK_VERSION%:*} (${MAGISK_VER_CODE})"
+    echo "--------- beginning of dmesg"
+    dmesg >>"${LOG_FILE}"
+    echo "--------- beginning of SELinux"
+    getenforce
+} >>"${LOG_FILE}"
 logcat -b main,system,crash -f "${LOG_FILE}" logcatcher-bootlog:S &
