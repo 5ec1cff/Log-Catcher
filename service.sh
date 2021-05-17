@@ -36,10 +36,8 @@ if [ ! -f "$FILE" ]; then
     su -c cp ${LOG_PATH}/bootlog.tar.gz /storage/emulated/0/Download/bootlog-$TIME.tar.gz
     if [ -f "/storage/emulated/0/Download/bootlog-$TIME.tar.gz" ]; then
       rm -f ${LOG_PATH}/bootlog.tar.gz
-      echo 1
       echo cp success >/data/local/tmpcache.txt
     else
-      echo 2
       cp ${LOG_PATH}/bootlog.tar.gz /sdcard/Android/bootlog-$TIME.tar.gz
     fi
   fi

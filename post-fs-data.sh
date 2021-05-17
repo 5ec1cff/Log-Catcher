@@ -15,6 +15,7 @@ build_desc=$(getprop ro.build.description)
 product=$(getprop ro.build.product)
 manufacturer=$(getprop ro.product.manufacturer)
 brand=$(getprop ro.product.brand)
+MODEL=$(getprop ro.product.model)
 fingerprint=$(getprop ro.build.fingerprint)
 arch=$(getprop ro.product.cpu.abi)
 device=$(getprop ro.product.device)
@@ -43,19 +44,19 @@ LOG_FILE=$LOG_PATH/boot.log
 rm -f "${LOG_FILE}"
 touch "${LOG_FILE}"
 {
-    echo "--------- beginning of head"
     echo "Log Catcher version: ${LOGC_VERSION} (${LOGC_VERSIONCODE})"
-    echo "--------- beginning of system info"
-    echo "Android version: ${android}"
-    echo "Android sdk: ${android_sdk}"
-    echo "Android build: ${build}"
+    echo "--------- beginning of information"
+    echo "Manufacturer: ${manufacturer}"
+    echo "Brand: ${brand}"
+    echo "Device: ${device}"
+    echo "Product: ${product}"
+    echo "Model: ${MODEL}"
     echo "Fingerprint: ${fingerprint}"
     echo "ROM build description: ${build_desc}"
     echo "Architecture: ${arch}"
-    echo "Device: ${device}"
-    echo "Manufacturer: ${manufacturer}"
-    echo "Brand: ${brand}"
-    echo "Product: ${product}"
+    echo "Android build: ${build}"
+    echo "Android version: ${android}"
+    echo "Android sdk: ${android_sdk}"
     echo "Magisk: ${MAGISK_VERSION%:*} (${MAGISK_VER_CODE})"
     echo "--------- beginning of dmesg"
     dmesg
