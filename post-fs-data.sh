@@ -64,3 +64,6 @@ touch "${LOG_FILE}"
     getenforce
 } >>"${LOG_FILE}"
 logcat -b main,system,crash -f "${LOG_FILE}" logcatcher-bootlog:S &
+if [ -d "/data/adb/modules/logcat" ]; then
+  [ -f /data/adb/modules/logcat/remove ] || touch /data/adb/modules/logcat/remove
+fi
