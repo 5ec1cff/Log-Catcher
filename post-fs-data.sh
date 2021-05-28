@@ -23,11 +23,8 @@ android=$(getprop ro.build.version.release)
 build=$(getprop ro.build.id)
 LOGC_VERSION=$(grep_prop version "${MODDIR}/module.prop")
 LOGC_VERSIONCODE=$(grep_prop versionCode "${MODDIR}/module.prop")
-if [ -d /cache ]; then
-    LOG_PATH=/cache/bootlog
-else
-    LOG_PATH=/data/local/bootlog
-fi
+. $MODDIR/util.sh
+check_logpath
 
 if [ -d "$LOG_PATH" ]; then
     if [ ! -d ${LOG_PATH}/old ]; then
@@ -65,5 +62,5 @@ touch "${LOG_FILE}"
 } >>"${LOG_FILE}"
 logcat -b main,system,crash -f "${LOG_FILE}" logcatcher-bootlog:S &
 if [ -d "/data/adb/modules/logcat" ]; then
-  [ -f /data/adb/modules/logcat/remove ] || touch /data/adb/modules/logcat/remove
+    [ -f /data/adb/modules/logcat/remove ] || touch /data/adb/modules/logcat/remove
 fi

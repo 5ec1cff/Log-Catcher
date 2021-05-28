@@ -1,25 +1,12 @@
 #!/system/bin/sh
 MODDIR=${0%/*}
-
-if [ -d /cache ]; then
-  LOG_PATH=/cache/bootlog
-else
-  LOG_PATH=/data/local/bootlog
-fi
+. $MODDIR/util.sh
+check_logpath
 
 while [ "$(getprop sys.boot_completed)" != "1" ]; do
   sleep 3
 done
-while [ ! -d "/storage/emulated/0/Android" ]; do
-  sleep 3
-done
-test_file="/storage/emulated/0/Download/.PERMISSION_TEST"
-touch "$test_file"
-while [ ! -f "$test_file" ]; do
-  touch "$test_file"
-  sleep 3
-done
-rm "$test_file"
+check_unlock
 FILE=/data/local/logcatcher/boot.lcs
 if [ ! -f "$FILE" ]; then
   pkill -f logcatcher-bootlog:S
@@ -33,6 +20,7 @@ if [ ! -f "$FILE" ]; then
     tar -czf ${LOG_PATH}/bootlog.tar.gz ${LOG_PATH}/*.log
   fi
   if [ -f ${LOG_PATH}/bootlog.tar.gz ]; then
+    check_write
     su -c cp ${LOG_PATH}/bootlog.tar.gz /storage/emulated/0/Download/bootlog-$TIME.tar.gz
     if [ -f "/storage/emulated/0/Download/bootlog-$TIME.tar.gz" ]; then
       rm -f ${LOG_PATH}/bootlog.tar.gz
